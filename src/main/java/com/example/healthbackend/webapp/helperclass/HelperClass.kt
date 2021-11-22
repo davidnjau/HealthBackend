@@ -26,3 +26,11 @@ data class LoginResponse(
     val emailAddress:String,
     val roles:List<String>,
 )
+
+data class RegisterResponse(
+
+    val userId:String,
+    val fullNames:String,
+    val emailAddress:String,
+    val roles:List<String>,
+)

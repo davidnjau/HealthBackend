@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import com.example.healthbackend.webapp.helperclass.*;
 
 @Service
@@ -106,6 +108,28 @@ public class StaffDetailsServiceImpl implements StaffDetailsService, RoleService
 
     }
 
+    public Results getStaffDetailsData(String userId){
+
+        StaffDetails userDetails1 = getStaffDetails(userId);
+        if (userDetails1 != null){
+            RegisterResponse registerResponse = new RegisterResponse(
+                    userId,
+                    userDetails1.getFullNames(),
+                    userDetails1.getEmailAddress(),
+                    userDetails1.getRolesCollection().stream()
+                            .map(Role::getName)
+                            .collect(Collectors.toList()));
+
+            return new Results(200, registerResponse);
+        }else {
+            return new Results(400, "User cannot be found.");
+
+        }
+
+
+
+    }
+
     public Results registerUser(StaffDetails staffDetails){
 
         String error = "";
@@ -127,7 +151,15 @@ public class StaffDetailsServiceImpl implements StaffDetailsService, RoleService
                     Long roleId1 = getRoleDetails("ROLE_ADMIN").getId();
                     addRoleToUser(roleId1, userId);
 
-                    return new Results(201, userDetails1);
+                    RegisterResponse registerResponse = new RegisterResponse(
+                            userId,
+                            userDetails1.getFullNames(),
+                            userDetails1.getEmailAddress(),
+                            userDetails1.getRolesCollection().stream()
+                                    .map(Role::getName)
+                                    .collect(Collectors.toList()));
+
+                    return new Results(201, registerResponse);
 
                 }
 

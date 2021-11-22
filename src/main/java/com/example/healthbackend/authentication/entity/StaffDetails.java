@@ -43,8 +43,6 @@ public class StaffDetails {
 
     private String password;
 
-    private boolean verified;
-
     @CreationTimestamp
     private Date createdAt;
 

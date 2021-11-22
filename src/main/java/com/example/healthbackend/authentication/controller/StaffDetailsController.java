@@ -45,22 +45,22 @@ public class StaffDetailsController {
 
     }
 
-    @RequestMapping(value = "/api/v1/users/get-users/", method = RequestMethod.GET)
-    public ResponseEntity getAllStaff(){
-
-        List<StaffDetails> usersList = staffDetailsService.getAllUsers();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        return new ResponseEntity(usersList,headers, HttpStatus.OK);
-    }
     @RequestMapping(value = "/api/v1/users/get-users/{userId}", method = RequestMethod.GET)
     public ResponseEntity getStaffDetails(@PathVariable("userId") String userId){
 
-        StaffDetails StaffDetails = staffDetailsService.getStaffDetails(userId);
-        if (StaffDetails != null){
-            return new ResponseEntity(StaffDetails, HttpStatus.CREATED);
+        Results staffDetails = staffDetailsService.getStaffDetailsData(userId);
+        if (staffDetails != null){
+
+            int statusCode = staffDetails.getStatusCode();
+            if (statusCode == 200){
+                return new ResponseEntity(staffDetails.getDetails(), HttpStatus.OK);
+            }else {
+                return ResponseEntity.badRequest().body(new ErrorMessage((String) staffDetails.getDetails()));
+            }
+
+
         }else {
-            return ResponseEntity.badRequest().body(new ErrorMessage("No user has been found"));
+            return ResponseEntity.badRequest().body(new ErrorMessage((String) staffDetails.getDetails()));
         }
 
     }
