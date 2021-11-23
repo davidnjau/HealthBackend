@@ -1,6 +1,7 @@
 package com.example.healthbackend.webapp.helperclass
 
 import com.example.healthbackend.authentication.entity.StaffDetails
+import java.util.*
 
 
 data class Results(
@@ -33,4 +34,19 @@ data class RegisterResponse(
     val fullNames:String,
     val emailAddress:String,
     val roles:List<String>,
+)
+data class RegisterRequest(
+
+    val password:String,
+    val fullNames:String,
+    val emailAddress:String,
+    val confirmPassword:String,
+)
+data class PatientRegistrationData(
+    val patientId:String,
+    val registrationDate:Date,
+    val firstName:String,
+    val lastName:String,
+    val dateOfBirth:Date,
+    val gender:String
 )

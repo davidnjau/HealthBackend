@@ -38,9 +38,6 @@ public class StaffDetails {
     @Column(unique = true)
     private String emailAddress;
 
-    @Column(unique = true)
-    private String username;
-
     private String password;
 
     @CreationTimestamp
@@ -52,4 +49,9 @@ public class StaffDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> rolesCollection = new ArrayList<>();
 
+    public StaffDetails(String fullNames, String emailAddress, String password) {
+        this.fullNames = fullNames;
+        this.emailAddress = emailAddress;
+        this.password = password;
+    }
 }

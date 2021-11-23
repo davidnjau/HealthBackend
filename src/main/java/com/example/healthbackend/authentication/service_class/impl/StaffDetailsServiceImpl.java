@@ -43,10 +43,6 @@ public class StaffDetailsServiceImpl implements StaffDetailsService, RoleService
         return staffDetailsRepository.existsByEmailAddress(emailAddress);
     }
 
-    @Override
-    public boolean isUserName(String userName) {
-        return staffDetailsRepository.existsByUsername(userName);
-    }
 
     @Override
     public boolean isRoleExists(String roleName) {
@@ -130,17 +126,21 @@ public class StaffDetailsServiceImpl implements StaffDetailsService, RoleService
 
     }
 
-    public Results registerUser(StaffDetails staffDetails){
+    public Results registerUser(RegisterRequest registerRequest){
 
         String error = "";
 
-        boolean isEmailExists = isEmailAddress(staffDetails.getEmailAddress());
-        boolean isUserExists = isUserName(staffDetails.getUsername());
+        String password = registerRequest.getPassword();
+        String confirmPassword = registerRequest.getConfirmPassword();
 
-        if (!isEmailExists){
+        if (password.equals(confirmPassword)){
 
-            if (!isUserExists){
+            String emailAddress = registerRequest.getEmailAddress();
+            String fullName = registerRequest.getFullNames();
+            StaffDetails staffDetails = new StaffDetails(fullName, emailAddress, password);
 
+            boolean isEmailExists = isEmailAddress(staffDetails.getEmailAddress());
+            if (!isEmailExists){
                 staffDetails.setPassword(passwordEncoder.encode(staffDetails.getPassword()));
                 StaffDetails userDetails1 = addStaffDetails(staffDetails);
                 if (userDetails1 != null){
@@ -163,14 +163,17 @@ public class StaffDetailsServiceImpl implements StaffDetailsService, RoleService
 
                 }
 
+
             }else {
-                error = error + "Username already exists.";
+                error = "EmailAddress already exists.";
             }
 
-        }else {
-            error = error + "Email already exists.";
 
+        }else {
+            error = "Passwords do not match";
         }
+
+
 
         return new Results(400, error);
 

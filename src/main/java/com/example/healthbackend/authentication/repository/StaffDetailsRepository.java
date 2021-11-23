@@ -7,6 +7,5 @@ public interface StaffDetailsRepository extends JpaRepository<StaffDetails, Stri
 
     StaffDetails findAllByEmailAddress(String email);
     Boolean existsByEmailAddress(String emailAddress);
-    Boolean existsByUsername(String userName);
     StaffDetails findAllByUserId(String userId);
 }

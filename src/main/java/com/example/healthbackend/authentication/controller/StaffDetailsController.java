@@ -24,7 +24,7 @@ public class StaffDetailsController {
     private StaffDetailsServiceImpl staffDetailsService;
 
     @RequestMapping(value = "/api/v1/auth/registration", method = RequestMethod.POST)
-    public ResponseEntity registerUser(@RequestBody StaffDetails StaffDetails){
+    public ResponseEntity registerUser(@RequestBody RegisterRequest StaffDetails){
 
         Results addedResults = staffDetailsService.registerUser(StaffDetails);
         if (addedResults != null){

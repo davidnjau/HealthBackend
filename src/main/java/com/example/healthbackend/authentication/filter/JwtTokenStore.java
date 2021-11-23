@@ -41,7 +41,10 @@ public class JwtTokenStore {
         User userDetails = ( User ) authentication.getPrincipal();
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(  userDetails.getUsername())
+                .subject(
+                        userDetails.getUsername()
+
+                )
                 .claim("roles", userDetails.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()))
