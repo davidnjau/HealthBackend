@@ -50,3 +50,21 @@ data class PatientRegistrationData(
     val dateOfBirth:Date,
     val gender:String
 )
+data class PatientsVitalsData(
+    val patientUUID:String,
+    val visitDate:Date,
+    val weightInKgs:Double,
+    val heightInCm:Double,
+    val bmiValue: Double?
+)
+data class PatientsFormData(
+    val patientUUID:String,
+    val visitDate:Date,
+    val generalHealth:String,
+
+    val weightDiet:String?,
+    val takingDrugs:String?,
+
+    val comments: String
+)
+

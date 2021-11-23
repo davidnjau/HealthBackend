@@ -1,0 +1,37 @@
+package com.example.healthbackend.webapp.controller;
+
+import com.example.healthbackend.webapp.helperclass.*;
+import com.example.healthbackend.webapp.service_class.impl.PatientRegistrationServiceImpl;
+import com.example.healthbackend.webapp.service_class.impl.PatientsVitalsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class PatientVitalsController {
+
+    @Autowired
+    private PatientsVitalsServiceImpl patientsVitalsService;
+
+    @RequestMapping(value = "/api/v1/patient/add-vitals", method = RequestMethod.POST)
+    public ResponseEntity addPatients(@RequestBody PatientsVitalsData patientsVitalsData){
+
+        Results addedPatients = patientsVitalsService.savePatientsVitals(patientsVitalsData);
+        int statusCode = addedPatients.getStatusCode();
+        var results = addedPatients.getDetails();
+        var message = results.toString();
+
+        if (statusCode == 200){
+            return new ResponseEntity(results, HttpStatus.OK);
+        }else {
+            return ResponseEntity.badRequest().body(new ErrorMessage(message));
+
+        }
+
+    }
+
+}
