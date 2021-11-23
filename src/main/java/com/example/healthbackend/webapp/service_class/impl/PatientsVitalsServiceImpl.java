@@ -2,10 +2,7 @@ package com.example.healthbackend.webapp.service_class.impl;
 
 import com.example.healthbackend.webapp.entity.PatientRegistration;
 import com.example.healthbackend.webapp.entity.PatientsVitals;
-import com.example.healthbackend.webapp.helperclass.Formatter;
-import com.example.healthbackend.webapp.helperclass.PatientListingData;
-import com.example.healthbackend.webapp.helperclass.PatientsVitalsData;
-import com.example.healthbackend.webapp.helperclass.Results;
+import com.example.healthbackend.webapp.helperclass.*;
 import com.example.healthbackend.webapp.repository.PatientsVitalsRepository;
 import com.example.healthbackend.webapp.service_class.service.PatientsVitalsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +36,8 @@ public class PatientsVitalsServiceImpl implements PatientsVitalsService {
     }
 
     @Override
-    public List<PatientListingData> getPatientsVitalsList(Date visitationDate) {
-        return getPatientsDataList(visitationDate);
+    public List<PatientsVitals> getPatientsVitalsList(Date visitationDate) {
+        return patientsVitalsRepository.findByVisitDate(visitationDate);
     }
 
 
@@ -78,12 +75,12 @@ public class PatientsVitalsServiceImpl implements PatientsVitalsService {
 
     }
 
-    private List<PatientListingData> getPatientsDataList(Date visitationDate){
+    public PatientsList getPatientsDataList(Date visitationDate){
 
         Formatter formatter = new Formatter();
         List<PatientListingData> patientListingDataList = new ArrayList<>();
 
-        List<PatientsVitals> patientsVitalsList = patientsVitalsRepository.findByVisitDate(visitationDate);
+        List<PatientsVitals> patientsVitalsList = getPatientsVitalsList(visitationDate);
         for (PatientsVitals patientsVitals : patientsVitalsList) {
             double weightKgs = patientsVitals.getWeightInKgs();
             double heightInCm = patientsVitals.getHeightInCm();
@@ -98,7 +95,13 @@ public class PatientsVitalsServiceImpl implements PatientsVitalsService {
 
         }
 
-        return patientListingDataList;
+        return new PatientsList(
+                patientListingDataList.size(),
+                null, null,
+                patientListingDataList);
+
 
     }
+
+
 }

@@ -11,5 +11,5 @@ public interface PatientRegistrationService {
 
     PatientRegistration savePatientRegistration(PatientRegistration patientRegistration);
     Boolean isPatientID(String patientId);
-    PatientsList getPatientListing(Date visitationDate);
+//    PatientsList getPatientListing(Date visitationDate);
 }

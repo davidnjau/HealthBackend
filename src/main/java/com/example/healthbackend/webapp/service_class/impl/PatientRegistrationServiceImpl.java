@@ -1,6 +1,7 @@
 package com.example.healthbackend.webapp.service_class.impl;
 
 import com.example.healthbackend.webapp.entity.PatientRegistration;
+import com.example.healthbackend.webapp.entity.PatientsVitals;
 import com.example.healthbackend.webapp.helperclass.*;
 import com.example.healthbackend.webapp.repository.PatientRegistrationRepository;
 import com.example.healthbackend.webapp.service_class.service.PatientRegistrationService;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +23,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     @Autowired
     private PatientRegistrationRepository patientRegistrationRepository;
 
-    @Autowired
-    private PatientsVitalsServiceImpl patientsVitalsService;
+//    @Autowired
+//    private PatientsVitalsServiceImpl patientsVitalsService;
 
     @Override
     public PatientRegistration savePatientRegistration(PatientRegistration patientRegistration) {
@@ -34,16 +36,15 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         return patientRegistrationRepository.existsByPatientId(patientId);
     }
 
-    @Override
-    public PatientsList getPatientListing(Date visitationDate) {
-
-        List<PatientListingData> patientListingDataList = patientsVitalsService.getPatientsVitalsList(visitationDate);
-
-        return new PatientsList(
-                patientListingDataList.size(),
-                null, null,
-                patientListingDataList);
-    }
+//    @Override
+//    public PatientsList getPatientListing(Date visitationDate) {
+//
+//        List<PatientListingData> patientListingDataList = getPatientsDataList(visitationDate);
+//        return new PatientsList(
+//                patientListingDataList.size(),
+//                null, null,
+//                patientListingDataList);
+//    }
 
     public Results addPatientRegistrationData(PatientRegistrationData patientRegistrationData){
 
@@ -91,6 +92,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         }
 
     }
+
+
 
 
 }

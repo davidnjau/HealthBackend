@@ -12,5 +12,5 @@ public interface PatientsVitalsService {
 
     Results savePatientsVitals(PatientsVitalsData patientsVitalsData);
     boolean isPatientVisits(String patientId, Date visitationDate);
-    List<PatientListingData> getPatientsVitalsList(Date visitationDate);
+    List<PatientsVitals> getPatientsVitalsList(Date visitationDate);
 }

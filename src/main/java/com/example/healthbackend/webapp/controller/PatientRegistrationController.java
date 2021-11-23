@@ -1,19 +1,25 @@
 package com.example.healthbackend.webapp.controller;
 
+import com.example.healthbackend.webapp.entity.PatientsVitals;
 import com.example.healthbackend.webapp.helperclass.*;
 import com.example.healthbackend.webapp.service_class.impl.PatientRegistrationServiceImpl;
+import com.example.healthbackend.webapp.service_class.impl.PatientsVitalsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class PatientRegistrationController {
 
     @Autowired
     private PatientRegistrationServiceImpl patientRegistrationService;
+
+    @Autowired
+    private PatientsVitalsServiceImpl patientsVitalsService;
 
     @RequestMapping(value = "/api/v1/patient/register-patient", method = RequestMethod.POST)
     public ResponseEntity addPatients(@RequestBody PatientRegistrationData patientRegistrationData){
@@ -42,8 +48,8 @@ public class PatientRegistrationController {
     @RequestMapping(value = "/api/v1/patient/get-patient-listing/{visitationDate}", method = RequestMethod.GET)
     public ResponseEntity getPatientDetails(@PathVariable("visitationDate") Date visitationDate){
 
-        PatientsList staffDetails = patientRegistrationService.getPatientListing(visitationDate);
-        return new ResponseEntity(staffDetails, HttpStatus.OK);
+        PatientsList patientDataList = patientsVitalsService.getPatientsDataList(visitationDate);
+        return new ResponseEntity(patientDataList, HttpStatus.OK);
 
     }
 
