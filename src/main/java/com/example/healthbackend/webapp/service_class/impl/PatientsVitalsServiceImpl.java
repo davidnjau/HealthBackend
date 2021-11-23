@@ -1,21 +1,32 @@
 package com.example.healthbackend.webapp.service_class.impl;
 
+import com.example.healthbackend.webapp.entity.PatientRegistration;
 import com.example.healthbackend.webapp.entity.PatientsVitals;
 import com.example.healthbackend.webapp.helperclass.Formatter;
+import com.example.healthbackend.webapp.helperclass.PatientListingData;
 import com.example.healthbackend.webapp.helperclass.PatientsVitalsData;
 import com.example.healthbackend.webapp.helperclass.Results;
 import com.example.healthbackend.webapp.repository.PatientsVitalsRepository;
 import com.example.healthbackend.webapp.service_class.service.PatientsVitalsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PatientsVitalsServiceImpl implements PatientsVitalsService {
 
     @Autowired
     private PatientsVitalsRepository patientsVitalsRepository;
+
+    @Autowired
+    private PatientRegistrationServiceImpl patientRegistrationService;
 
     @Override
     public Results savePatientsVitals(PatientsVitalsData patientsVitalsData) {
@@ -25,6 +36,11 @@ public class PatientsVitalsServiceImpl implements PatientsVitalsService {
     @Override
     public boolean isPatientVisits(String patientId, Date visitationDate) {
         return patientsVitalsRepository.existsByPatientUUIDAndVisitDate(patientId, visitationDate);
+    }
+
+    @Override
+    public List<PatientListingData> getPatientsVitalsList(Date visitationDate) {
+        return getPatientsDataList(visitationDate);
     }
 
 
@@ -59,6 +75,30 @@ public class PatientsVitalsServiceImpl implements PatientsVitalsService {
         }
 
 
+
+    }
+
+    private List<PatientListingData> getPatientsDataList(Date visitationDate){
+
+        Formatter formatter = new Formatter();
+        List<PatientListingData> patientListingDataList = new ArrayList<>();
+
+        List<PatientsVitals> patientsVitalsList = patientsVitalsRepository.findByVisitDate(visitationDate);
+        for (PatientsVitals patientsVitals : patientsVitalsList) {
+            double weightKgs = patientsVitals.getWeightInKgs();
+            double heightInCm = patientsVitals.getHeightInCm();
+            String patientUUID = patientsVitals.getPatientUUID();
+            double bmi = formatter.calculateBMI(weightKgs, heightInCm);
+
+            PatientListingData patientData = patientRegistrationService.getPatientData(patientUUID);
+            if (patientData != null){
+                PatientListingData returnData = new PatientListingData(patientData.getUserName(), patientData.getAge(), bmi);
+                patientListingDataList.add(returnData);
+            }
+
+        }
+
+        return patientListingDataList;
 
     }
 }

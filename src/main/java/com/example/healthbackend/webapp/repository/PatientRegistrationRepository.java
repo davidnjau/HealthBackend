@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PatientRegistrationRepository extends JpaRepository<PatientRegistration, String> {
 
     boolean existsByPatientId(String patientId);
+
 }

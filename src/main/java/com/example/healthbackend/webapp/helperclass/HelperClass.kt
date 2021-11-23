@@ -67,4 +67,14 @@ data class PatientsFormData(
 
     val comments: String
 )
-
+data class PatientListingData(
+    val userName : String,
+    val age: Int,
+    val bmiValue: Double
+)
+data class PatientsList(
+    val size: Int,
+    val next: String?,
+    val previous: String?,
+    val details: List<PatientListingData>
+)

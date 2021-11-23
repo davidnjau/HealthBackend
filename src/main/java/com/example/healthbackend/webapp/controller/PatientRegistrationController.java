@@ -1,17 +1,13 @@
 package com.example.healthbackend.webapp.controller;
 
-import com.example.healthbackend.webapp.helperclass.ErrorMessage;
-import com.example.healthbackend.webapp.helperclass.PatientRegistrationData;
-import com.example.healthbackend.webapp.helperclass.Results;
-import com.example.healthbackend.webapp.helperclass.SuccessMessage;
+import com.example.healthbackend.webapp.helperclass.*;
 import com.example.healthbackend.webapp.service_class.impl.PatientRegistrationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 public class PatientRegistrationController {
@@ -40,6 +36,14 @@ public class PatientRegistrationController {
             return ResponseEntity.badRequest().body(new ErrorMessage("Error adding the patient. Please try again."));
 
         }
+
+    }
+
+    @RequestMapping(value = "/api/v1/patient/get-patient-listing/{visitationDate}", method = RequestMethod.GET)
+    public ResponseEntity getPatientDetails(@PathVariable("visitationDate") Date visitationDate){
+
+        PatientsList staffDetails = patientRegistrationService.getPatientListing(visitationDate);
+        return new ResponseEntity(staffDetails, HttpStatus.OK);
 
     }
 
