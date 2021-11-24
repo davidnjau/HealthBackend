@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -48,26 +49,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore( jwtTokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class );
         http.addFilterBefore( jwtTokenFilter, JwtTokenAuthenticationFilter.class );
 
-        http.csrf().disable().authorizeRequests()
-                .antMatchers(GET, "/register*").permitAll()
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers( "/register*").permitAll()
                 .antMatchers("/api/v1/auth/**").permitAll()
-                .antMatchers("/login*").permitAll()
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/login/**").permitAll()
+                .anyRequest().authenticated()
                 .and().formLogin().loginPage("/login")
-                .permitAll();
-
-//        http.csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers(GET, "/static/**").permitAll()
-//                .antMatchers("/login/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and().formLogin().loginPage("/login")
-//                .and()
-//                .exceptionHandling()
-//                .authenticationEntryPoint( this::commence )
-//                .and()
-//                .sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS );
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint( this::commence )
+                .and()
+                .sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS );
     }
 
     private void commence(HttpServletRequest request, HttpServletResponse response,
