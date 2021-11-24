@@ -43,6 +43,7 @@ data class RegisterRequest(
     val confirmPassword:String,
 )
 data class PatientRegistrationData(
+    val id:String?,
     val patientId:String,
     val registrationDate:Date,
     val firstName:String,
