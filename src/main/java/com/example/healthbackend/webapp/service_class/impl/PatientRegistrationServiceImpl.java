@@ -23,9 +23,6 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     @Autowired
     private PatientRegistrationRepository patientRegistrationRepository;
 
-//    @Autowired
-//    private PatientsVitalsServiceImpl patientsVitalsService;
-
     @Override
     public PatientRegistration savePatientRegistration(PatientRegistration patientRegistration) {
         return patientRegistrationRepository.save(patientRegistration);
@@ -36,32 +33,26 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         return patientRegistrationRepository.existsByPatientId(patientId);
     }
 
-//    @Override
-//    public PatientsList getPatientListing(Date visitationDate) {
-//
-//        List<PatientListingData> patientListingDataList = getPatientsDataList(visitationDate);
-//        return new PatientsList(
-//                patientListingDataList.size(),
-//                null, null,
-//                patientListingDataList);
-//    }
 
     public Results addPatientRegistrationData(PatientRegistrationData patientRegistrationData){
 
+        Formatter formatter = new Formatter();
+
         boolean isPatientId = isPatientID(patientRegistrationData.getPatientId());
         if (!isPatientId){
+
             PatientRegistration patientRegistration = new PatientRegistration(
                     patientRegistrationData.getPatientId(),
-                    patientRegistrationData.getRegistrationDate(),
+                    formatter.changeDateFormat(patientRegistrationData.getRegistrationDate()),
                     patientRegistrationData.getFirstName(),
                     patientRegistrationData.getLastName(),
-                    patientRegistrationData.getDateOfBirth(),
+                    formatter.changeDateFormat(patientRegistrationData.getDateOfBirth()),
                     patientRegistrationData.getGender());
             PatientRegistration addedPatient = savePatientRegistration(patientRegistration);
             if (addedPatient != null){
-                return new Results(200, new SuccessMessage("Patient has been saved successfully."));
+                return new Results(200, "Patient has been saved successfully.");
             }else {
-                return new Results(400, new ErrorMessage("Patient cannot be saved. Please try again after sometime."));
+                return new Results(400, "Patient cannot be saved. Please try again after sometime.");
 
             }
 
@@ -74,6 +65,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     public PatientListingData getPatientData(String patientUUID){
 
+        Formatter formatter = new Formatter();
+
         Optional<PatientRegistration> optionalPatientRegistration = patientRegistrationRepository.findById(patientUUID);
         if (optionalPatientRegistration.isPresent()){
 
@@ -82,8 +75,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             String lastName = patientRegistration.getLastName();
             String fullNames = firstName +  " " + lastName;
 
-            Date dateOfBirth = patientRegistration.getDateOfBirth();
-            Formatter formatter = new Formatter();
+            Date dateOfBirth = formatter.changeDateFormat(patientRegistration.getDateOfBirth());
             int age = formatter.calculateAge(dateOfBirth);
 
             return new PatientListingData(fullNames, age, 0);

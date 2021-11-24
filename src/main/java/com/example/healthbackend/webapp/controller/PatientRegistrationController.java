@@ -35,7 +35,6 @@ public class PatientRegistrationController {
                 return new ResponseEntity(new SuccessMessage(message), HttpStatus.OK);
             }else {
                 return ResponseEntity.badRequest().body(new ErrorMessage(message));
-
             }
 
         }else {
@@ -46,7 +45,7 @@ public class PatientRegistrationController {
     }
 
     @RequestMapping(value = "/api/v1/patient/get-patient-listing/{visitationDate}", method = RequestMethod.GET)
-    public ResponseEntity getPatientDetails(@PathVariable("visitationDate") Date visitationDate){
+    public ResponseEntity getPatientDetails(@PathVariable("visitationDate") String visitationDate){
 
         PatientsList patientDataList = patientsVitalsService.getPatientsDataList(visitationDate);
         return new ResponseEntity(patientDataList, HttpStatus.OK);

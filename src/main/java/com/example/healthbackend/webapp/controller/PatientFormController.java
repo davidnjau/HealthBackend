@@ -1,9 +1,6 @@
 package com.example.healthbackend.webapp.controller;
 
-import com.example.healthbackend.webapp.helperclass.ErrorMessage;
-import com.example.healthbackend.webapp.helperclass.PatientsFormData;
-import com.example.healthbackend.webapp.helperclass.PatientsVitalsData;
-import com.example.healthbackend.webapp.helperclass.Results;
+import com.example.healthbackend.webapp.helperclass.*;
 import com.example.healthbackend.webapp.service_class.impl.PatientsFormServiceImpl;
 import com.example.healthbackend.webapp.service_class.impl.PatientsVitalsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +26,7 @@ public class PatientFormController {
         var message = results.toString();
 
         if (statusCode == 200){
-            return new ResponseEntity(message, HttpStatus.OK);
+            return new ResponseEntity(new SuccessMessage(message), HttpStatus.OK);
         }else {
             return ResponseEntity.badRequest().body(new ErrorMessage(message));
 

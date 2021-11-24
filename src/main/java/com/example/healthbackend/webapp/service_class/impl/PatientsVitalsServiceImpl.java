@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,14 +38,31 @@ public class PatientsVitalsServiceImpl implements PatientsVitalsService {
 
     @Override
     public List<PatientsVitals> getPatientsVitalsList(Date visitationDate) {
-        return patientsVitalsRepository.findByVisitDate(visitationDate);
+
+        Formatter formatter = new Formatter();
+        List<PatientsVitals> datedList = new ArrayList<>();
+        List<PatientsVitals> vitalsList = patientsVitalsRepository.findAll();
+        for (PatientsVitals patientsVitals : vitalsList){
+
+            Date date = patientsVitals.getVisitDate();
+
+            boolean isEqual = formatter.compareDates(visitationDate, date);
+            if (isEqual){
+                datedList.add(patientsVitals);
+            }
+
+        }
+
+        return datedList;
     }
 
 
     private Results addPatientsVitals(PatientsVitalsData patientsVitalsData){
 
+        Formatter formatter = new Formatter();
+
         String patientUUID = patientsVitalsData.getPatientUUID();
-        Date visitationDate = patientsVitalsData.getVisitDate();
+        Date visitationDate = formatter.changeDateFormat(patientsVitalsData.getVisitDate());
 
         try {
             boolean isPatientVisitDate = isPatientVisits(patientUUID, visitationDate);
@@ -57,7 +75,6 @@ public class PatientsVitalsServiceImpl implements PatientsVitalsService {
                         patientsVitalsData.getHeightInCm());
                 patientsVitalsRepository.save(patientsVitals);
 
-                Formatter formatter = new Formatter();
                 double bmi = formatter.calculateBMI(patientsVitals.getWeightInKgs(), patientsVitals.getHeightInCm());
                 PatientsVitalsData addedPatientsVitalsData = new PatientsVitalsData(patientUUID, visitationDate,
                         patientsVitals.getWeightInKgs(), patientsVitals.getHeightInCm(), bmi);
@@ -75,12 +92,18 @@ public class PatientsVitalsServiceImpl implements PatientsVitalsService {
 
     }
 
-    public PatientsList getPatientsDataList(Date visitationDate){
+    public PatientsList getPatientsDataList(String visitationDate){
 
         Formatter formatter = new Formatter();
         List<PatientListingData> patientListingDataList = new ArrayList<>();
 
-        List<PatientsVitals> patientsVitalsList = getPatientsVitalsList(visitationDate);
+        Date visitDate = formatter.convertDateMillis(visitationDate);
+//        String newVisitDate =  formatter.changeDateFormat2(visitDate);
+//        System.out.println("+++++++xx " + newVisitDate);
+
+        List<PatientsVitals> patientsVitalsList = getPatientsVitalsList(visitDate);
+        System.out.println("+++++++ " + patientsVitalsList);
+
         for (PatientsVitals patientsVitals : patientsVitalsList) {
             double weightKgs = patientsVitals.getWeightInKgs();
             double heightInCm = patientsVitals.getHeightInCm();

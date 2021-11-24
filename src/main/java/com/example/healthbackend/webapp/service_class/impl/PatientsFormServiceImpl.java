@@ -1,6 +1,7 @@
 package com.example.healthbackend.webapp.service_class.impl;
 
 import com.example.healthbackend.webapp.entity.PatientsForm;
+import com.example.healthbackend.webapp.helperclass.Formatter;
 import com.example.healthbackend.webapp.helperclass.PatientsFormData;
 import com.example.healthbackend.webapp.helperclass.Results;
 import com.example.healthbackend.webapp.repository.PatientsFormRepository;
@@ -28,8 +29,10 @@ public class PatientsFormServiceImpl implements PatientsFormService {
 
     private Results addPatientsForm(PatientsFormData patientsFormData){
 
+        Formatter formatter = new Formatter();
+
         String patientUUID = patientsFormData.getPatientUUID();
-        Date visitDate = patientsFormData.getVisitDate();
+        Date visitDate = formatter.changeDateFormat(patientsFormData.getVisitDate());
         String generalHealth = patientsFormData.getGeneralHealth();
         String comments = patientsFormData.getComments();
 
