@@ -50,7 +50,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
                     patientRegistrationData.getGender());
             PatientRegistration addedPatient = savePatientRegistration(patientRegistration);
             if (addedPatient != null){
-                return new Results(200, "Patient has been saved successfully.");
+                return new Results(200, addedPatient);
             }else {
                 return new Results(400, "Patient cannot be saved. Please try again after sometime.");
 

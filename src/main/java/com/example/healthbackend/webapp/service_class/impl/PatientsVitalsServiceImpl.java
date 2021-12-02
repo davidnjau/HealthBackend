@@ -98,11 +98,35 @@ public class PatientsVitalsServiceImpl implements PatientsVitalsService {
         List<PatientListingData> patientListingDataList = new ArrayList<>();
 
         Date visitDate = formatter.convertDateMillis(visitationDate);
-//        String newVisitDate =  formatter.changeDateFormat2(visitDate);
-//        System.out.println("+++++++xx " + newVisitDate);
-
         List<PatientsVitals> patientsVitalsList = getPatientsVitalsList(visitDate);
-        System.out.println("+++++++ " + patientsVitalsList);
+
+        for (PatientsVitals patientsVitals : patientsVitalsList) {
+            double weightKgs = patientsVitals.getWeightInKgs();
+            double heightInCm = patientsVitals.getHeightInCm();
+            String patientUUID = patientsVitals.getPatientUUID();
+            double bmi = formatter.calculateBMI(weightKgs, heightInCm);
+
+            PatientListingData patientData = patientRegistrationService.getPatientData(patientUUID);
+            if (patientData != null){
+                PatientListingData returnData = new PatientListingData(patientData.getUserName(), patientData.getAge(), bmi);
+                patientListingDataList.add(returnData);
+            }
+
+        }
+
+        return new PatientsList(
+                patientListingDataList.size(),
+                null, null,
+                patientListingDataList);
+
+
+    }
+    public PatientsList getAllPatientsDataList(){
+
+        Formatter formatter = new Formatter();
+        List<PatientListingData> patientListingDataList = new ArrayList<>();
+
+        List<PatientsVitals> patientsVitalsList = patientsVitalsRepository.findAll();
 
         for (PatientsVitals patientsVitals : patientsVitalsList) {
             double weightKgs = patientsVitals.getWeightInKgs();

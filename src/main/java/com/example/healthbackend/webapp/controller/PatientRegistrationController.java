@@ -32,7 +32,7 @@ public class PatientRegistrationController {
             var message = results.toString();
 
             if (statusCode == 200){
-                return new ResponseEntity(new SuccessMessage(message), HttpStatus.OK);
+                return new ResponseEntity(results, HttpStatus.OK);
             }else {
                 return ResponseEntity.badRequest().body(new ErrorMessage(message));
             }
@@ -48,6 +48,13 @@ public class PatientRegistrationController {
     public ResponseEntity getPatientDetails(@PathVariable("visitationDate") String visitationDate){
 
         PatientsList patientDataList = patientsVitalsService.getPatientsDataList(visitationDate);
+        return new ResponseEntity(patientDataList, HttpStatus.OK);
+
+    }
+    @RequestMapping(value = "/api/v1/patient/get-all-patient-listing/", method = RequestMethod.GET)
+    public ResponseEntity getAllPatientDetails(){
+
+        PatientsList patientDataList = patientsVitalsService.getAllPatientsDataList();
         return new ResponseEntity(patientDataList, HttpStatus.OK);
 
     }
